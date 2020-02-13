@@ -11,7 +11,7 @@ describe('GET /', () => {
           name  
       }
     }
-    }`
+    }`;
     response  = await  request(app)
       .post('/graphql').send({ query:  query_string})
     expect(response.body.data.posts[0].title).toBe("My first blog post")
