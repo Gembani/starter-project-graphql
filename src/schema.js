@@ -32,10 +32,16 @@ export default new GraphQLSchema({
                 type: new GraphQLList(post),
                 resolve: () => fakeDatabase.getBlogPosts()
             },
-            authorsPosts: {
-                type: new GraphQLList(post),
-                resolve: (author_id) => fakeDatabase.getPostsOfAuthor(author_id)
-            }
+            post: {
+                type: post,
+                args: {
+                    id: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    }
+                },
+                resolve: (parent, args) => fakeDatabase.getBlogPost(args.id)
+            },
+
         })
     })
 });
