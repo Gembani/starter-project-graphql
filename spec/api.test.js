@@ -21,6 +21,7 @@ describe('GET /', () => {
        post(id: 1) {
          id
          content
+         
        } 
     }`;
     response  = await  request(app).post('/graphql').send({ query:  query_string});
@@ -50,7 +51,6 @@ describe('GET /', () => {
     response  = await request(app).post('/graphql').send({ query:  query_string});
     expect(response.body.data.author.id).toBe("88d6bec2");
   });
-
 
   test('verify send get posts of authors', async () =>{
     const query_string = `{
