@@ -1,29 +1,7 @@
 import {GraphQLSchema, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLNonNull, GraphQLList} from 'graphql';
 import {fakeDatabase} from './FakeDatabase';
-
-
-const post = new GraphQLObjectType({
-    name: 'posts',
-    fields: () => ({
-        id: {type: GraphQLInt},
-        title: {type: GraphQLString},
-        content: {type: GraphQLString},
-        author: {type: author}
-    }),
-    resolve: () => fakeDatabase.getBlogPosts()
-});
-
-const author = new GraphQLObjectType({
-    name: 'Author',
-    fields: () =>  ({
-        id: {type: GraphQLString},
-        name: {type: GraphQLString},
-        email: {type: GraphQLString},
-        posts: { type: new GraphQLList(post) }
-    })
-});
-
-
+import post from './models/post'
+import author from './models/author'
 
 export default new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -40,7 +18,11 @@ export default new GraphQLSchema({
                         type: new GraphQLNonNull(GraphQLInt)
                     }
                 },
-                resolve: (parent, args) => fakeDatabase.getBlogPost(args.id)
+                resolve: (parent, args) => {
+                    const post = fakeDatabase.getBlogPost(args.id);
+                    post.comments = fakeDatabase.getCommentsForPost(args.id);
+                    return post
+                }
             },
             author: {
                 type: author,
@@ -51,22 +33,11 @@ export default new GraphQLSchema({
                 },
                 resolve: (parent, args) => {
                     let author = fakeDatabase.getAuthor(args.id);
-
                     author.posts = fakeDatabase.getPostsOfAuthor(args.id);
 
                     return author
                 }
             },
-            // postsAuthor:{
-            //     type: new GraphQLList,
-            //     args: {
-            //         id: {
-            //             type: new GraphQLNonNull(GraphQLString)
-            //         }
-            //     },
-            //     resolve: (parent, args) => fakeDatabase.getPostsOfAuthor(args.id)
-            // }
-
         })
     })
 });
