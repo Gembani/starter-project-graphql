@@ -6,6 +6,6 @@ export default new GraphQLObjectType({
         id: {type: GraphQLString},
         postId: {type: GraphQLInt},
         name: {type: GraphQLString},
-        content: {type: GraphQLString }
+        content: {type: GraphQLString}
     })
 });

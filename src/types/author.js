@@ -1,5 +1,6 @@
 import {GraphQLList, GraphQLObjectType, GraphQLString} from "graphql";
 import post from './post';
+import {fakeDatabase} from "../FakeDatabase";
 
 export default new GraphQLObjectType({
     name: 'Author',
@@ -7,6 +8,9 @@ export default new GraphQLObjectType({
         id: {type: GraphQLString},
         name: {type: GraphQLString},
         email: {type: GraphQLString},
-        posts: { type: new GraphQLList(post) }
+        posts: {
+            type: new GraphQLList(post),
+            resolve: () => fakeDatabase.getPostsOfAuthor(this.id)
+        }
     })
 });

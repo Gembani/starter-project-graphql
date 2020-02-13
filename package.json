@@ -7,7 +7,7 @@
     "test": "npm run build && jest spec/",
     "build": "babel src --out-dir dist/",
     "run": "npm run build && node dist/index.js",
-    "serve": "npm run build && node dist/serve.js"
+    "serve": "npm run build && nodemon dist/serve.js"
   },
   "keywords": [],
   "author": "",

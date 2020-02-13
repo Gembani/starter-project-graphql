@@ -1,7 +1,8 @@
 import {GraphQLSchema, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLNonNull, GraphQLList} from 'graphql';
 import {fakeDatabase} from './FakeDatabase';
-import post from './models/post'
-import author from './models/author'
+import post from './types/post'
+import author from './types/author'
+
 
 export default new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -18,11 +19,7 @@ export default new GraphQLSchema({
                         type: new GraphQLNonNull(GraphQLInt)
                     }
                 },
-                resolve: (parent, args) => {
-                    const post = fakeDatabase.getBlogPost(args.id);
-                    post.comments = fakeDatabase.getCommentsForPost(args.id);
-                    return post
-                }
+                resolve: (parent, args) => fakeDatabase.getBlogPost(args.id)
             },
             author: {
                 type: author,
@@ -31,12 +28,7 @@ export default new GraphQLSchema({
                         type: new GraphQLNonNull(GraphQLString)
                     }
                 },
-                resolve: (parent, args) => {
-                    let author = fakeDatabase.getAuthor(args.id);
-                    author.posts = fakeDatabase.getPostsOfAuthor(args.id);
-
-                    return author
-                }
+                resolve: (parent, args) => fakeDatabase.getAuthor(args.id)
             },
         })
     })
