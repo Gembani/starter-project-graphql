@@ -14,7 +14,6 @@ describe('GET /', () => {
     }`;
     response  = await  request(app).post('/graphql').send({ query:  query_string});
     expect(response.body.data.posts[0].title).toBe("My first blog post");
-    console.log(response.body)
   });
 
 
@@ -29,6 +28,17 @@ describe('GET /', () => {
     expect(response.body.data.post.id).toBe(1);
   });
 
+  test('verify single author', async () =>{
+    const query_string = `{
+       author(id: "88d6bec2") {
+         id
+         name
+       } 
+    }`;
+    response  = await request(app).post('/graphql').send({ query:  query_string});
+    expect(response.body.data.author.id).toBe("88d6bec2");
+  });
+
 
   test('verify send get posts of authors', async () =>{
     const query_string = `{
@@ -41,9 +51,8 @@ describe('GET /', () => {
          }
        }
     }`;
-    response  = await  request(app).post('/graphql').send({ query:  query_string});
-    expect(response.body.data.author.posts).toBeGreaterThan(0);
-    console.log(response.body)
+    response  = await request(app).post('/graphql').send({ query:  query_string});
+    expect(response.body.data.author.posts.length).toBeGreaterThan(0);
   });
 
 });

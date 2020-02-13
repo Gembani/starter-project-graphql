@@ -18,7 +18,8 @@ const author = new GraphQLObjectType({
     fields: () =>  ({
         id: {type: GraphQLString},
         name: {type: GraphQLString},
-        email: {type: GraphQLString}
+        email: {type: GraphQLString},
+        posts: { type: new GraphQLList(post) }
     })
 });
 
@@ -41,6 +42,30 @@ export default new GraphQLSchema({
                 },
                 resolve: (parent, args) => fakeDatabase.getBlogPost(args.id)
             },
+            author: {
+                type: author,
+                args: {
+                    id: {
+                        type: new GraphQLNonNull(GraphQLString)
+                    }
+                },
+                resolve: (parent, args) => {
+                    let author = fakeDatabase.getAuthor(args.id);
+
+                    author.posts = fakeDatabase.getPostsOfAuthor(args.id);
+
+                    return author
+                }
+            },
+            // postsAuthor:{
+            //     type: new GraphQLList,
+            //     args: {
+            //         id: {
+            //             type: new GraphQLNonNull(GraphQLString)
+            //         }
+            //     },
+            //     resolve: (parent, args) => fakeDatabase.getPostsOfAuthor(args.id)
+            // }
 
         })
     })

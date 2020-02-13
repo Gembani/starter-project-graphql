@@ -25,7 +25,13 @@ class FakeDatabase{
                 title: 'Building a REST API',
                 content: 'A pratical guide on how to build your own REST API.',
                 author: '77e2448a',
-            }
+            },
+            {
+                id: 4,
+                title: 'My first blog post',
+                content: 'This is my very first blog post. Hope you like it!',
+                author: '88d6bec2',
+            },
         ];
 
         this.comments = [
