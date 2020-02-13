@@ -1,23 +1,41 @@
-import { gql } from 'graphql';
+import {GraphQLSchema, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLNonNull, GraphQLList} from 'graphql';
+import {fakeDatabase} from './FakeDatabase';
 
-export const typeDef = gql`
-    type Post {
-        id: Int
-        title: String
-        content: String
-        author: Author
-    }
-    
-    type Author {
-        id: String
-        name: String
-        email: String
-    }
-    
-    type Comment {
-        id: Int
-        post: Post 
-        name: String
-        content: String
-    }
-`;
+
+const post = new GraphQLObjectType({
+    name: 'posts',
+    fields: () => ({
+        id: {type: GraphQLInt},
+        title: {type: GraphQLString},
+        content: {type: GraphQLString},
+        author: {type: author}
+    }),
+    resolve: () => fakeDatabase.getBlogPosts()
+});
+
+const author = new GraphQLObjectType({
+    name: 'Author',
+    fields: () =>  ({
+        id: {type: GraphQLString},
+        name: {type: GraphQLString},
+        email: {type: GraphQLString}
+    })
+});
+
+
+
+export default new GraphQLSchema({
+    query: new GraphQLObjectType({
+        name: 'Query',
+        fields: () => ({
+            posts: {
+                type: new GraphQLList(post),
+                resolve: () => fakeDatabase.getBlogPosts()
+            },
+            authorsPosts: {
+                type: new GraphQLList(post),
+                resolve: (author_id) => fakeDatabase.getPostsOfAuthor(author_id)
+            }
+        })
+    })
+});
